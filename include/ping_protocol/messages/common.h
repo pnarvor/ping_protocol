@@ -238,10 +238,10 @@ inline std::ostream& operator<<(std::ostream& os, const ping_protocol::ProtocolV
 
 inline std::ostream& operator<<(std::ostream& os, const ping_protocol::DeviceInformation& msg)
 {
-    os << "ping_protocol::ProtocolVersion :" << std::endl
-       << "  - device_type      : " << msg.information().device_type
-       << "  - device revision  : " << (unsigned int)msg.information().device_revision
-       << "  - firmware_version : " << msg.information().firmware_version;
+    os << "ping_protocol::DeviceInformation :"
+       << "\n  - device_type      : " << msg.information().device_type
+       << "\n  - device revision  : " << (unsigned int)msg.information().device_revision
+       << "\n  - firmware_version : " << msg.information().firmware_version;
     return os;
 }
 
