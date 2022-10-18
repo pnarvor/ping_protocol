@@ -14,9 +14,9 @@ int main()
     for(int i = 0; i < 10; i++) {
         //client->send(GeneralRequest(5));
         //client->send(GeneralRequest(4));
-        client->send(Transducer());
+        client->send(ping360::Transducer());
         getchar();
-        client->send(MotorOff());
+        client->send(ping360::MotorOff());
         getchar();
     }
 

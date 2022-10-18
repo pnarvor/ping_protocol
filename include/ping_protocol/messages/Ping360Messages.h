@@ -4,7 +4,7 @@
 #include <ping_protocol/messages/MessageBase.h>
 #include <ping_protocol/messages/common.h>
 
-namespace ping_protocol {
+namespace ping_protocol { namespace ping360 {
 
 // one byte packing
 #pragma pack(push, 1)
@@ -156,9 +156,10 @@ struct MotorOff : public Message
 
 #pragma pack(pop)
 
+} //namespace ping360
 } //namespace ping_protocol
 
-inline std::ostream& operator<<(std::ostream& os, const ping_protocol::PingParameters& params)
+inline std::ostream& operator<<(std::ostream& os, const ping_protocol::ping360::PingParameters& params)
 {
     os <<   "mode               : " << (unsigned int)params.mode
        << "\ngain_setting       : " << (unsigned int)params.gain_setting
@@ -170,16 +171,16 @@ inline std::ostream& operator<<(std::ostream& os, const ping_protocol::PingParam
     return os;
 }
 
-inline std::ostream& operator<<(std::ostream& os, const ping_protocol::SetPing360Id& msg)
+inline std::ostream& operator<<(std::ostream& os, const ping_protocol::ping360::SetPing360Id& msg)
 {
-    os << "ping_protocol::SetPing360Id :" << std::endl
+    os << "ping360::SetPing360Id :" << std::endl
        << "  - device_id : " << msg.device_id();
     return os;
 }
 
-inline std::ostream& operator<<(std::ostream& os, const ping_protocol::DeviceData& msg)
+inline std::ostream& operator<<(std::ostream& os, const ping_protocol::ping360::DeviceData& msg)
 {
-    os << "ping_protocol::DeviceData :";
+    os << "ping360::DeviceData :";
     std::ostringstream oss;
     oss << msg.ping_parameters()
         << "\ndata_length        : " << msg.metadata().data_length;
@@ -191,9 +192,9 @@ inline std::ostream& operator<<(std::ostream& os, const ping_protocol::DeviceDat
     return os;
 }
 
-inline std::ostream& operator<<(std::ostream& os, const ping_protocol::Transducer& msg)
+inline std::ostream& operator<<(std::ostream& os, const ping_protocol::ping360::Transducer& msg)
 {
-    os << "ping_protocol::Transducer :";
+    os << "ping360::Transducer :";
     std::ostringstream oss;
     oss << msg.ping_parameters()
         << "\ntransmit           : " << (unsigned int)msg.config().transmit;
@@ -205,16 +206,16 @@ inline std::ostream& operator<<(std::ostream& os, const ping_protocol::Transduce
     return os;
 }
 
-inline std::ostream& operator<<(std::ostream& os, const ping_protocol::Reset& msg)
+inline std::ostream& operator<<(std::ostream& os, const ping_protocol::ping360::Reset& msg)
 {
-    os << "ping_protocol::Reset :" << std::endl
+    os << "ping360::Reset :" << std::endl
        << "  - run_bootloader : " << msg.run_bootloader();
     return os;
 }
 
-inline std::ostream& operator<<(std::ostream& os, const ping_protocol::MotorOff& msg)
+inline std::ostream& operator<<(std::ostream& os, const ping_protocol::ping360::MotorOff& msg)
 {
-    os << "ping_protocol::MotorOff" << std::endl;
+    os << "ping360::MotorOff" << std::endl;
     return os;
 }
 
