@@ -36,6 +36,7 @@ class PingClient
     public:
 
     static Ptr CreateUDP(const std::string& remoteIP, uint16_t remotePort);
+    static Ptr CreateSerial(const std::string& device, unsigned int baudrate);
 
     void send(const Message& msg);
 

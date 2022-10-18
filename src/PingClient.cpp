@@ -20,6 +20,11 @@ PingClient::Ptr PingClient::CreateUDP(const std::string& remoteIP, uint16_t remo
     return Ptr(new PingClient(rtac::asio::Stream::CreateUDPClient(remoteIP, remotePort)));
 }
 
+PingClient::Ptr PingClient::CreateSerial(const std::string& device, unsigned int baudrate)
+{
+    return Ptr(new PingClient(rtac::asio::Stream::CreateSerial(device, baudrate)));
+}
+
 void PingClient::send(const Message& msg)
 {
     // synchronous write
