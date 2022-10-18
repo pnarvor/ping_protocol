@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.6)
 project(ping_protocol VERSION 0.1)
 
+option(BUILD_TESTS "Build unit tests" ON)
+
 find_package(rtac_asio REQUIRED)
 
 list(APPEND ping_messages_headers
@@ -16,4 +18,21 @@ target_include_directories(ping_messages INTERFACE
     $<INSTALL_INTERFACE:include>
 )
 
-add_subdirectory(tests)
+list(APPEND ping_protocol_headers
+    include/ping_protocol/PingClient.h
+)
+add_library(ping_protocol SHARED
+    src/PingClient.cpp
+)
+target_include_directories(ping_protocol PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+target_link_libraries(ping_protocol PUBLIC
+    ping_messages
+    rtac_asio
+)
+
+if(BUILD_TESTS)
+    add_subdirectory(tests)
+endif()
