@@ -8,40 +8,64 @@ namespace ping_protocol {
 // allows to use _1, _2 ...
 using namespace std::placeholders;
 
-PingClient::PingClient(rtac::asio::Stream::Ptr stream) :
+PingClient::PingClient(rtac::asio::Stream::Ptr stream, bool enableDump) :
     stream_(stream),
     incomingMessage_(0,0)
 {
+    if(enableDump) {
+        stream_->enable_io_dump();
+    }
+    stream_->flush();
+    stream_->start();
     this->initiate_connection();
 }
 
-PingClient::Ptr PingClient::CreateUDP(const std::string& remoteIP, uint16_t remotePort)
+PingClient::Ptr PingClient::CreateUDP(const std::string& remoteIP, uint16_t remotePort,
+                                      bool enableDump)
 {
-    return Ptr(new PingClient(rtac::asio::Stream::CreateUDPClient(remoteIP, remotePort)));
+    return Ptr(new PingClient(
+        rtac::asio::Stream::CreateUDPClient(remoteIP, remotePort), enableDump));
 }
 
-PingClient::Ptr PingClient::CreateSerial(const std::string& device, unsigned int baudrate)
+PingClient::Ptr PingClient::CreateSerial(const std::string& device, unsigned int baudrate,
+                                         bool enableDump)
 {
-    return Ptr(new PingClient(rtac::asio::Stream::CreateSerial(device, baudrate)));
+    return Ptr(new PingClient(rtac::asio::Stream::CreateSerial(device, baudrate),
+                              enableDump));
 }
 
-void PingClient::send(const Message& msg)
+std::size_t PingClient::send(const Message& msg)
 {
     // synchronous write
     auto sent = stream_->write(msg.size(), msg.data());
     if(sent != msg.size()) {
+        //std::ostringstream oss;
+        //oss << "PingClient : could not send full message ("
+        //    << sent << '/' << msg.size() << " bytes)";
+        //throw std::runtime_error(oss.str());
+        std::cerr << "PingClient : could not send full message ("
+            << sent << '/' << msg.size() << " bytes)" << std::endl;
+    }
+    return sent;
+}
+
+void PingClient::async_send(const Message& msg)
+{
+    // synchronous write
+    if(!stream_->async_write(msg.size(), msg.data(), empty_callback)) {
         std::ostringstream oss;
-        oss << "PingClient : could not send full message ("
-            << sent << '/' << msg.size() << " bytes)";
+        oss << "PingClient : could not send message";
         throw std::runtime_error(oss.str());
     }
 }
 
 void PingClient::initiate_connection()
 {
+    std::cout << "Initiating connection " << std::endl;
     stream_->async_read(protocolVersion_.size(), protocolVersion_.data(),
         std::bind(&PingClient::initiate_callback, this, _1, _2));
-    this->send(GeneralRequest(5));
+    this->async_send(GeneralRequest(5));
+    //this->send(GeneralRequest(5));
 }
 
 void PingClient::initiate_callback(const ErrorCode& err, std::size_t byteCount)

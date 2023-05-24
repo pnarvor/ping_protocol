@@ -20,13 +20,15 @@ class PingClient
 
     protected:
 
+    static void empty_callback(const ErrorCode&, std::size_t) {}
+
     rtac::asio::Stream::Ptr stream_;
     ProtocolVersion protocolVersion_;
 
     MessageHeader incomingHeader_;
     Message       incomingMessage_;
 
-    PingClient(rtac::asio::Stream::Ptr stream);
+    PingClient(rtac::asio::Stream::Ptr stream, bool enableDump);
 
     void initiate_callback(const ErrorCode& err, std::size_t byteCount);
     void get_header();
@@ -35,10 +37,16 @@ class PingClient
 
     public:
 
-    static Ptr CreateUDP(const std::string& remoteIP, uint16_t remotePort);
-    static Ptr CreateSerial(const std::string& device, unsigned int baudrate);
+    static Ptr CreateUDP(const std::string& remoteIP, uint16_t remotePort,
+                         bool enableDump = false);
+    static Ptr CreateSerial(const std::string& device, unsigned int baudrate,
+                            bool enableDump = false);
 
-    void send(const Message& msg);
+    rtac::asio::Stream::Ptr      stream()       { return stream_; }
+    rtac::asio::Stream::ConstPtr stream() const { return stream_; }
+
+    std::size_t send(const Message& msg);
+    void async_send(const Message& msg);
 
     void initiate_connection();
     virtual void message_callback(const Message& msg) const;
