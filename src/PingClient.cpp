@@ -126,7 +126,7 @@ void PingClient::payload_callback(const ErrorCode& err, std::size_t byteCount)
     this->get_header();
 }
 
-void PingClient::message_callback(const Message& msg) const
+void PingClient::message_callback(const Message& msg)
 {
     print(std::cout, msg) << std::endl;
 }

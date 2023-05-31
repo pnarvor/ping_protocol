@@ -28,7 +28,7 @@ class PingClient
     MessageHeader incomingHeader_;
     Message       incomingMessage_;
 
-    PingClient(rtac::asio::Stream::Ptr stream, bool enableDump);
+    PingClient(rtac::asio::Stream::Ptr stream, bool enableDump = true);
 
     void initiate_callback(const ErrorCode& err, std::size_t byteCount);
     void get_header();
@@ -49,7 +49,7 @@ class PingClient
     void async_send(const Message& msg);
 
     void initiate_connection();
-    virtual void message_callback(const Message& msg) const;
+    virtual void message_callback(const Message& msg);
 };
 
 } //namespace ping_protocol

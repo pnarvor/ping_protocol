@@ -9,6 +9,7 @@ list(APPEND ping_protocol_headers
     include/ping_protocol/messages/common.h
     include/ping_protocol/messages/MessageBase.h
     include/ping_protocol/messages/Ping360Messages.h
+    include/ping_protocol/messages/Ping1DMessages.h
     include/ping_protocol/messages/print_utils.h
     include/ping_protocol/PingClient.h
 )
@@ -24,7 +25,7 @@ target_link_libraries(ping_protocol PUBLIC
 )
 
 rtac_install_target(ping_protocol
-    PUBLIC_HEADERS ${ping_protocol_headers}
+    HEADER_FILES ${ping_protocol_headers}
 )
 
 if(BUILD_TESTS)
